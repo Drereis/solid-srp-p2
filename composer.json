@@ -1,0 +1,16 @@
+{
+    "name": "andre-joaquim/solid-srp-p2",
+    "description": "Srp em PHP puro para p2",
+    "autoload": {
+        "psr-4": {
+            "AndreJoaquim\\SolidSrpP2\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Drereis",
+            "email": "andreluisdasilvareis03@gmail.com"
+        }
+    ],
+    "require": {}
+}
