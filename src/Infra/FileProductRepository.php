@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infra;
 
+
+use App\Domain\Product;
 use App\Domain\ProductRepository;
+use SplFileObject;
 
 final class FileProductRepository implements ProductRepository
 {
@@ -23,17 +26,50 @@ final class FileProductRepository implements ProductRepository
         }
     }
 
-    /**
-     * @param array{Id:int,name:string,price:float} $product
-     */
 
-    public function save(array $product): void
+    public function save(Product $product): Product
     {
-        file_put_contents(
-            $this->filePath,
-            json_encode($product, JSON_UNESCAPED_UNICODE) . PHP_EOL,
-            FILE_APPEND
-        );
+        $newId = $this->getLastId() + 1;
+        $savedProduct = new Product($newId, $product->getName(), $product->getPrice());
+
+        $data = json_encode($savedProduct->toArray(), JSON_UNESCAPED_UNICODE);
+        file_put_contents($this->filePath, $data . "\n", FILE_APPEND | LOCK_EX);
+
+        return $savedProduct;
+    }
+
+    public function findAll(): array
+    {
+        $products = [];
+        if(!file_exists($this->filePath)) {
+            return $products;
+        }
+
+        $file = new SplFileObject($this->filePath, 'r');
+
+        while (!$file->eof()) {
+            $line = trim($file->fgets());
+            if ($line) {
+                $data = json_decode($line, true);
+                if ($data && isset($data['id'], $data['name'],$data['price'])) {
+                    $products[] = Product::fromArray($data);
+                }
+            }
+        }
+
+        return $products;
+    }
+
+    public function getLastId(): int
+    {
+        $products = $this->findAll();
+
+        if (empty($products)) {
+            return 0;
+        }
+
+        $lastProduct = end($products);
+        return $lastProduct->getId() ?? 0;
     }
 }
 

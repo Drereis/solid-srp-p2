@@ -1,11 +1,12 @@
 <?php
 
 declare(strict_types=1);
-
+    
 namespace App\Application;
 
 use App\Domain\ProductRepository;
 use App\Domain\ProductValidator;
+use App\Domain\Product;
 
 class ProductService
 {
@@ -19,28 +20,33 @@ class ProductService
     }
 
     /**
-     * @param array{Id?:int,name?:string?:,price?:float,} $input
+     * @param array{name?:string?:,price?:float,} $input
+     * @return Product|array
      */
 
-    public function generateNextId(): int
+    public function createProduct(array $input): Product|array
     {
-        return count($this->product) + 1;
-    }
+        $validationResult = $this->validator->validate($input);
 
-    public function createProduct(array $input): bool
-    {
-        $errors = $this->validator->validate($input);
-        if (!empty($errors)) {
-            return false;
+        if (is_array($validationResult)) {
+            return $validationResult;
         }
 
-        $product = [
-            'name' => isset($input['name']) ? (string) $input['name'] : 'Nome do produto',
-            'price' => (int) ($input['price'] ?? ''),
-        ];
+        $name = trim($input['name']);
+        $price = (float)str_replace(',', '.' , (string)$input['price']);
+        $product = new Product(null, $name, $price);
+        $saveProduct = $this->repository->save($product);
 
-        $this->repository->save($product);
-        return true;
+        return $saveProduct;
+    }
+    
+    /**
+     * @return Product[]
+     */
+
+    public function ListProducts(): array
+    {
+        return $this->repository->findAll();
     }
 }
 

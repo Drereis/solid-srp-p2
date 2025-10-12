@@ -1,0 +1,6 @@
+{"id":1,"name":"babao","price":15}
+{"id":2,"name":"babao","price":15}
+{"id":3,"name":"babao","price":15}
+{"id":4,"name":"geladeira tsunami","price":5000}
+{"id":5,"name":"oi","price":5000}
+{"id":6,"name":"babao","price":15}
