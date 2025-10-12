@@ -3,7 +3,7 @@
     "description": "Srp em PHP puro para p2",
     "autoload": {
         "psr-4": {
-            "AndreJoaquim\\SolidSrpP2\\": "src/"
+            "App\\": "src/"
         }
     },
     "authors": [

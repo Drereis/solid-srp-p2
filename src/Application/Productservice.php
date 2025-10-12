@@ -22,6 +22,25 @@ class ProductService
      * @param array{Id?:int,name?:string?:,price?:float,} $input
      */
 
+    public function generateNextId(): int
+    {
+        return count($this->product) + 1;
+    }
+
     public function createProduct(array $input): bool
+    {
+        $errors = $this->validator->validate($input);
+        if (!empty($errors)) {
+            return false;
+        }
+
+        $product = [
+            'name' => isset($input['name']) ? (string) $input['name'] : 'Nome do produto',
+            'price' => (int) ($input['price'] ?? ''),
+        ];
+
+        $this->repository->save($product);
+        return true;
+    }
 }
 
