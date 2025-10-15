@@ -106,3 +106,8 @@ Documente passos reproduzíveis com entrada e resultado esperado:
 - `FileProductRepository` é o único que lê/escreve no arquivo.
 - `SimpleProductValidator` apenas valida.
 - Código segue PSR-12 e organização em camadas.
+
+-André Luis
+RA: 1987363
+-Joaquim Moreira
+RA: 1993917
